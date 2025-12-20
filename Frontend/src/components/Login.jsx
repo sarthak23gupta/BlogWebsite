@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
     console.log({ username, password });
+    if(username!=null && password!=null){
+      localStorage.setItem("access_token", "Yes");
+      localStorage.setItem("username", username);
+      navigate("/home")
+    }
   };
 
   return (
