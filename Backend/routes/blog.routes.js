@@ -4,26 +4,34 @@ const router=express.Router()
 
 router.post('/add',async(req,res)=>{
    try {
-     const {title , body}=req.body
- 
-     await Blog.create({
-         title:title,
-         body:body
-     })
-     res.status(200).json({
-         msg:'Blog Post Done Successfully',
-         title
-     })
-     res.status(404).json({
-        success:false,
-        msg:'not able to fetch blog',
-     })
-   } catch (error) {
-        res.status(500).json({
-            msg:'not able to post the blog',
-            error:error.message
+        const {title , body}=req.body
+    
+        let newBlog = await Blog.create({
+            title:title,
+            body:body
         })
-   }
+        if(newBlog)
+        {
+            return res.status(200).json({
+                success:true,
+                msg:'Blog Post Done Successfully',
+                data:newBlog
+            })
+        }
+        else
+        {
+            return res.status(400).json({
+                success:false,
+                msg:'Not able to Create blog',
+            })
+        }
+    } catch (error) {
+            return res.status(500).json({
+                success:false,
+                msg:'not able to post the blog',
+                error:error.message
+            })
+    }
 })
                     
 router.get('/get/:id',async(req,res)=>{
@@ -34,16 +42,21 @@ router.get('/get/:id',async(req,res)=>{
             _id:id
         })
         // console.log(fetchData.id);
-        res.status(200).json({
-            success:true,
-            msg:'Blog Fetch done successfully',
-            title:fetchData.title,
-            body:fetchData.body
-        })
-        if(!fetchData){
-            res.status(404).json({
+        if(fetchData)
+        {
+            res.status(200).json({
+                success:true,
+                msg:'Blog Fetch done successfully',
+                // title:fetchData.title,
+                // body:fetchData.body
+                data:fetchData
+            })
+        }
+        else
+        {
+            res.status(400).json({
                 success:false,
-                msg:'not able to fetch blog',
+                msg:'Blog not found for this id',
             })
         }
     } catch (error) {
@@ -58,24 +71,32 @@ router.get('/get/:id',async(req,res)=>{
 router.get('/get',async(req,res)=>{
     try {
         let fetchAllData = await Blog.find();
-        res.status(200).json({
-            success:true,
-            msg:'Fetch all the blogs successfully',
-            total:fetchAllData.length,
-            data:fetchAllData
-        })
-        res.status(404).json({
-            success:false,
-            msg:'not able to fetch blog',
-        })
+        if(fetchAllData)
+        {
+            res.status(200).json({
+                success:true,
+                msg:'Fetch all the blogs successfully',
+                total:fetchAllData.length,
+                data:fetchAllData
+            })
+        }
+        else
+        {
+            res.status(400).json({
+                success:false,
+                msg:'Blog not found',
+            })
+        }
 
     } catch (error) {
         res.status(500).json({
             success:false,
-            msg:'not able to fetch all blogs',
+            msg:'Not able to fetch all blogs',
             error:error.message
         })
     }
 })
+
+
 
 module.exports=router
