@@ -97,6 +97,35 @@ router.get('/get',async(req,res)=>{
     }
 })
 
-
+router.delete('/delete/:id',async(req,res)=>{
+    try {
+        const {id} =req.params
+    
+        let fetchData =await Blog.findByIdAndDelete(id)
+        if(fetchData)
+            {
+                res.status(200).json({
+                    success:true,
+                    msg:'Blog Deleted successfully',
+                    // title:fetchData.title,
+                    // body:fetchData.body
+                    data:fetchData
+                })
+            }
+            else
+            {
+                res.status(400).json({
+                    success:false,
+                    msg:'Blog not Deleted for this id',
+                })
+            }
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            msg:'Not able to delete blog',
+            error:error.message
+        })
+    }
+})
 
 module.exports=router
