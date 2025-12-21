@@ -1,14 +1,16 @@
 const express=require('express')
 const Blog =require('../models/Blog.model')
+const User =require('../models/User.model')
 const router=express.Router()
 
 router.post('/add',async(req,res)=>{
    try {
-        const {title , body}=req.body
+        const {title , body , userID }=req.body
     
         let newBlog = await Blog.create({
             title:title,
-            body:body
+            body:body,
+            user:userID
         })
         if(newBlog)
         {
@@ -38,9 +40,8 @@ router.get('/get/:id',async(req,res)=>{
     try {
         const {id}=req.params
         // const {title , id}=req.params
-        let fetchData=await Blog.findOne({
-            _id:id
-        })
+        let fetchData=await Blog.findOne({_id:id}).populate('user','name email username')
+        // let fetchData=await Blog.find().populate('user')
         // console.log(fetchData.id);
         if(fetchData)
         {
@@ -70,7 +71,7 @@ router.get('/get/:id',async(req,res)=>{
 
 router.get('/get',async(req,res)=>{
     try {
-        let fetchAllData = await Blog.find();
+        let fetchAllData = await Blog.find().populate('user');
         if(fetchAllData)
         {
             res.status(200).json({
