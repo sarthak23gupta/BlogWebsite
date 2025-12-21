@@ -8,6 +8,9 @@ import ProtectedRoute from './auth/ProtectedRoute'
 import HomePage from './components/HomePage'
 import NotFound from './components/NotFound'
 import PublicRoute from './auth/PublicRoute'
+import Create from './components/Create'
+import About from './components/About'
+import Profile from './components/Profile'
 // import './App.css'
 
 function App() {
@@ -22,7 +25,15 @@ function App() {
       <Route path='/register' element={<Register/>}/>
 
       {/* Protected Rooutes */}
-      <Route path='/home' element={<ProtectedRoute><HomePage/></ProtectedRoute>}/>
+      {/* <Route path='/home' element={<ProtectedRoute><HomePage/></ProtectedRoute>}/> */}
+
+      <Route element={<ProtectedRoute/>}>
+        <Route path="/home" element={<HomePage/>}/>
+        <Route path="/create" element={<Create/>}/>
+        <Route path="/about" element={<About/>}/>
+        <Route path="/profile" element={<Profile/>}/>
+      </Route>
+
 
 
       {/* Not found */}
