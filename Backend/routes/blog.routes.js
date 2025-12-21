@@ -73,8 +73,8 @@ router.get('/getByUser/:userID',async(req,res)=>{
     try {
         const {userID} = req.params
         // console.log(userID);
-        let fetchDataForSingleUser = await Blog.find({user:userID})
-        // let fetchDataForSingleUser = await Blog.findOne({user:userID}).populate('users','-password')
+        // let fetchDataForSingleUser = await Blog.find({user:userID})
+        let fetchDataForSingleUser = await Blog.findOne({user:userID}).populate('users','-password')
         if(fetchDataForSingleUser)
         {
             res.status(200).json({
