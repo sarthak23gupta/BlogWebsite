@@ -17,7 +17,7 @@ const cors = require("cors");
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(cors({
-  origin: process.env.allowed_origin,
+  origin: [process.env.allowed_origin],
   credentials: true
 }));
 

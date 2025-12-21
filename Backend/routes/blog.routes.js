@@ -69,6 +69,37 @@ router.get('/get/:id',async(req,res)=>{
     }
 })
 
+router.get('/getByUser/:userID',async(req,res)=>{
+    try {
+        const {userID} = req.params
+        // console.log(userID);
+        let fetchDataForSingleUser = await Blog.find({user:userID})
+        // let fetchDataForSingleUser = await Blog.findOne({user:userID}).populate('users','-password')
+        if(fetchDataForSingleUser)
+        {
+            res.status(200).json({
+                success:true,
+                total:fetchDataForSingleUser.length,
+                msg:'All Blog Fetch done successfully',
+                data:fetchDataForSingleUser
+            })
+        }
+        else
+        {
+            res.status(400).json({
+                success:false,
+                msg:'Blog not found for this id'
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            msg:'not able to fetch blog',
+            error:error.message
+        })
+    }
+})
+
 router.get('/get',async(req,res)=>{
     try {
         let fetchAllData = await Blog.find().populate('user','-password');
