@@ -40,7 +40,7 @@ router.get('/get/:id',async(req,res)=>{
     try {
         const {id}=req.params
         // const {title , id}=req.params
-        let fetchData=await Blog.findOne({_id:id}).populate('user','name email username')
+        let fetchData=await Blog.findOne({_id:id}).populate('user','-password')
         // let fetchData=await Blog.find().populate('user')
         // console.log(fetchData.id);
         if(fetchData)
@@ -71,7 +71,7 @@ router.get('/get/:id',async(req,res)=>{
 
 router.get('/get',async(req,res)=>{
     try {
-        let fetchAllData = await Blog.find().populate('user');
+        let fetchAllData = await Blog.find().populate('user','-password');
         if(fetchAllData)
         {
             res.status(200).json({
