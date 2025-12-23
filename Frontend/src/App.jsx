@@ -11,6 +11,7 @@ import PublicRoute from './auth/PublicRoute'
 import Create from './components/Create'
 import About from './components/About'
 import Profile from './components/Profile'
+import Blog from './components/Blog'
 // import './App.css'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
 
       <Route element={<ProtectedRoute/>}>
         <Route path="/home" element={<HomePage/>}/>
+        <Route path="/blogs" element={<Blog/>}/>
         <Route path="/create" element={<Create/>}/>
         <Route path="/about" element={<About/>}/>
         <Route path="/profile" element={<Profile/>}/>

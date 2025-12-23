@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import {NavLink, useNavigate } from 'react-router-dom';
+import { API_Base_URL } from '../../config/config';
+import {toast} from 'react-toastify'
+
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -8,10 +11,40 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [contactNo, setContactNo] = useState('');
 
+  const navigate = useNavigate()
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle registration logic here
     console.log({ username, fullname, email, password, contactNo });
+    fetch(`${API_Base_URL}/user/signup`, {
+      method:"POST",
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify({
+        name:fullname,
+        username:username,
+        email:email,
+        password:password,
+        contact:contactNo
+      })
+    })
+    .then((res)=>res.json())
+    .then((data)=>{
+      console.log(data)
+      if(data.success){
+        localStorage.setItem("access_token", "Yes")
+        navigate("/home")
+        toast.success("Account created successfully")
+      }
+      else{
+        toast.error(data.msg)
+      }
+    })
+    .catch((err)=>{
+      console.log(err.message)
+    })
   };
 
   return (

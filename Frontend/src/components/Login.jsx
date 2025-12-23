@@ -1,20 +1,49 @@
 import React, { useState } from 'react';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
+import { API_Base_URL } from '../../config/config';
+import { toast } from 'react-toastify';
+
 
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
-    console.log({ username, password });
-    if(username!=null && password!=null){
-      localStorage.setItem("access_token", "Yes");
-      localStorage.setItem("username", username);
-      navigate("/home")
+    // console.log({ email, password });
+    if(email!=null && password!=null){
+      fetch(`${API_Base_URL}/user/login`, {
+        method:"POST",
+        headers:{
+          'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({
+          email:email,
+          password:password,
+        })
+      })
+      .then((res)=>res.json())
+      .then((data)=>{
+        console.log(data)
+        if(data.success){
+          localStorage.setItem("access_token", "Yes");
+          localStorage.setItem("email", email);
+          navigate("/home")
+          toast.success("Loggedin Successfully")
+        }
+        else{
+          toast.error(data.msg)
+        }
+      })
+      .catch((err)=>{
+        toast.error(err.message)
+        // console.log(err.message)
+      })
+
+      
     }
   };
 
@@ -24,16 +53,16 @@ const Login = () => {
         <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-600" htmlFor="username">
-              Username
+            <label className="block text-sm font-medium text-gray-600" htmlFor="email">
+              Email
             </label>
             <input
-              id="username"
+              id="email"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter your username"
+              placeholder="Enter your email"
             />
           </div>
 
