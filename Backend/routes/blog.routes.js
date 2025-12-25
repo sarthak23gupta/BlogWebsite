@@ -45,7 +45,7 @@ router.get('/get/:id',async(req,res)=>{
         // console.log(fetchData.id);
         if(fetchData)
         {
-            res.status(200).json({
+            return res.status(200).json({
                 success:true,
                 msg:'Blog Fetch done successfully',
                 // title:fetchData.title,
@@ -55,13 +55,13 @@ router.get('/get/:id',async(req,res)=>{
         }
         else
         {
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 msg:'Blog not found for this id',
             })
         }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             msg:'not able to fetch blog',
             error:error.message
@@ -77,7 +77,7 @@ router.get('/getByUser/:userID',async(req,res)=>{
         let fetchDataForSingleUser = await Blog.findOne({user:userID}).populate('users','-password')
         if(fetchDataForSingleUser)
         {
-            res.status(200).json({
+            return res.status(200).json({
                 success:true,
                 total:fetchDataForSingleUser.length,
                 msg:'All Blog Fetch done successfully',
@@ -86,13 +86,13 @@ router.get('/getByUser/:userID',async(req,res)=>{
         }
         else
         {
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 msg:'Blog not found for this id'
             })
         }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             msg:'not able to fetch blog',
             error:error.message
@@ -105,7 +105,7 @@ router.get('/get',async(req,res)=>{
         let fetchAllData = await Blog.find().populate('user','-password');
         if(fetchAllData)
         {
-            res.status(200).json({
+            return res.status(200).json({
                 success:true,
                 msg:'Fetch all the blogs successfully',
                 total:fetchAllData.length,
@@ -114,14 +114,14 @@ router.get('/get',async(req,res)=>{
         }
         else
         {
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 msg:'Blog not found',
             })
         }
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             msg:'Not able to fetch all blogs',
             error:error.message
@@ -136,7 +136,7 @@ router.delete('/delete/:id',async(req,res)=>{
         let fetchData =await Blog.findByIdAndDelete(id)
         if(fetchData)
             {
-                res.status(200).json({
+                return res.status(200).json({
                     success:true,
                     msg:'Blog Deleted successfully',
                     // title:fetchData.title,
@@ -146,13 +146,13 @@ router.delete('/delete/:id',async(req,res)=>{
             }
             else
             {
-                res.status(400).json({
+                return res.status(400).json({
                     success:false,
                     msg:'Blog not found for this id',
                 })
             }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             msg:'Not able to delete blog',
             error:error.message
@@ -174,7 +174,7 @@ router.put('/update',async(req,res)=>{
         updateBlog.save()
         if(updateBlog)
         {
-            res.status(200).json({
+            return res.status(200).json({
                 success:true,
                 msg:'Blog Updated successfully',
                 // title:fetchData.title,
@@ -184,13 +184,13 @@ router.put('/update',async(req,res)=>{
         }
         else
         {
-            res.status(400).json({
+            return res.status(400).json({
                 success:false,
                 msg:'Blog not found for this id',
             })
         }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success:false,
             msg:'Not able to Update blog',
             error:error.message
