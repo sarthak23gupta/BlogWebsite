@@ -11,7 +11,9 @@ const connectMongo = require('./database/db');
 // const blogRouter = require('./routes/blog.routes')
 const blogRouter = require('./routes/blog.routes');
 const userRouter = require('./routes/user.routes')
+const bcrypt = require("bcrypt")
 const cors = require("cors");
+const jwt=require("jsonwebtoken")
 
 // app.use(express.static(path.join(__dirname,'')))
 app.use(express.urlencoded({extended:true}))
@@ -20,7 +22,6 @@ app.use(cors({
   origin: [process.env.allowed_origin],
   credentials: true
 }));
-
 
 // let blog=[
 //     /*
