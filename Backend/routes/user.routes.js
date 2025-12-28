@@ -1,6 +1,9 @@
 const express=require('express')
 const User= require('../models/User.model')
 const router =express.Router()
+const bcrypt = require("bcrypt")
+const jwt =require('jsonwebtoken')
+const JWT_SECRET = process.env.Jwt_Secret_Key
 
 router.post('/signup',async(req,res)=>{
     try {
@@ -29,22 +32,33 @@ router.post('/signup',async(req,res)=>{
                 msg:"Fill blank details "
             })
         }   
+
+        const hash = await bcrypt.hash(password,10)
       
         let Value =await User.create({
             email:email,
-            password:password,
+            password:hash,
             name:name,
             username:username,
             contact:contact
         })
-        if(Value)
-        {
-            return res.status(200).json({
-                success:true,
-                msg:'SignUp Successfully',
-                details:Value
-            })
-        }
+        const userData = {email:email, name:name, username:username, contact:contact}
+        const token = jwt.sign(
+            {
+                id:Value._id,
+                email:Value.email
+            },
+            JWT_SECRET,
+            {
+                expiresIn: '1h'
+            }
+        )
+        return res.status(200).json({
+            success:true,
+            msg:'SignUp Successfully',
+            // details:userData,
+            token:token
+        })
 
     } catch (error) {
         return res.status(500).json({
@@ -59,25 +73,44 @@ router.post('/login',async(req,res)=>{
     try {
         const {email,password}=req.body
         let value =await User.findOne({
-                email:email,
-                password:password
+            email:email
         })
-        if(value)
-        {
-            return res.status(200).json({
-                success:true,
-                msg:'Login Successfully',
-                details:value
-            })
-        }
-        else
+
+        if(!value)
         {
             return res.status(400).json({
                 success:false,
-                msg:"Please use correct credientials"
+                msg:"Invalid credientials"
             })
-    
         }
+
+        const match = await bcrypt.compare(password,value.password)
+       
+        if(!match)
+        {
+            return res.status(400).json({
+                success:false,
+                msg:"Invalid credientials"
+            }) 
+        }
+        const { password: _ , ...userData } = value._doc
+        const token = jwt.sign(
+            {
+                id:value._id,
+                email:value.email
+            },
+            JWT_SECRET,
+            {
+                expiresIn: '1h'
+            }
+        )
+        return res.status(200).json({
+                success:true,
+                msg:'Login Successfully',
+                // details:userData,
+                // details:value
+                token:token
+            })
     } catch (error) {
         return res.status(500).json({
             success:false,
